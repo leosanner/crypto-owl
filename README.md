@@ -1,36 +1,109 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🦉 Crypto Owl
 
-## Getting Started
+(Genenerated by AI)
+Crypto Owl is a personal side project designed as both a **practical tool** and a **portfolio-grade application**.  
+Its goal is to help users monitor cryptocurrencies by combining **price alerts**, **news tracking**, and **user-defined preferences** in a single platform.
 
-First, run the development server:
+The application is built entirely with **Next.js**, focusing on clean architecture, scalability, and modern web development practices.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🚀 Features
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- 🔐 User authentication with secure session management
+- 📊 Cryptocurrency watchlists
+- 🔔 Price alerts based on user-defined thresholds
+- 📰 Periodic news updates related to selected cryptocurrencies
+- ⚙️ Configurable alert frequency and notification rules
+- 💳 Architecture ready for future billing and premium plans
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 🧱 Tech Stack
 
-To learn more about Next.js, take a look at the following resources:
+### Frontend & Backend
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Next.js (App Router)
+- TypeScript
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Authentication
 
-## Deploy on Vercel
+- Auth.js (NextAuth)
+- Database-backed session management for improved security, session revocation, and future billing integration
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Database
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Microsoft Azure Database for PostgreSQL
+  - Managed PostgreSQL service
+  - Used to store:
+    - Users
+    - Sessions
+    - Watchlists
+    - Alerts
+    - News references
+
+### External APIs
+
+#### 📰 News API
+
+- Fetches cryptocurrency-related news articles
+- Articles are filtered and linked to user-selected assets
+
+#### 📈 Crypto Market API
+
+- Provides real-time and historical cryptocurrency price data
+- Used for monitoring prices and triggering alerts
+
+---
+
+## 🏗️ Architecture Overview
+
+The project follows a layered architecture to ensure scalability and maintainability:
+
+- **Authentication Layer**  
+  Handles login, session management, and access control using Auth.js.
+
+- **Domain Layer**  
+  Contains business logic such as alert rules, watchlists, and user-specific limits.
+
+- **Infrastructure Layer**  
+  Integrates with external services including:
+
+  - Cryptocurrency APIs
+  - News APIs
+  - Database provider
+  - (Future) Payment gateway
+
+- **Background Jobs**  
+  Responsible for:
+  - Periodic price checks
+  - News fetching
+  - Alert evaluation and notification triggers
+
+---
+
+## 🔒 Security
+
+- Secure HTTP-only cookies for session handling
+- Database-backed sessions allowing immediate revocation
+- OAuth-based authentication (no password storage in the MVP)
+- Environment-based secret management
+
+---
+
+## 📦 Project Status
+
+Crypto Owl is under active development and is intended for **personal use**, experimentation, and professional portfolio demonstration.
+
+Planned improvements include:
+
+- Additional notification channels (email, push, messaging apps)
+- News relevance scoring and filtering
+- Premium plans with extended limits
+
+---
+
+## 📄 License
+
+This project is developed for personal and educational purposes.  
+Licensing terms may be defined if the project evolves into a public or commercial product.
