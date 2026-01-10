@@ -1,10 +1,10 @@
-import { Client, QueryConfig } from "pg";
+import { Pool, QueryConfig } from "pg";
 
 export async function query(queryObject: QueryConfig) {
 	let client;
 
 	try {
-		client = await getNewClient();
+		client = await getNewPool();
 		await client.connect();
 
 		const result = await client.query(queryObject);
@@ -17,8 +17,8 @@ export async function query(queryObject: QueryConfig) {
 	}
 }
 
-export async function getNewClient() {
-	return new Client({
+export async function getNewPool() {
+	return new Pool({
 		user: process.env.PGUSER,
 		database: process.env.PGDATABASE,
 		password: process.env.PGPASSWORD,
