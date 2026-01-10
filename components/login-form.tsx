@@ -38,6 +38,7 @@ export function LoginForm({
 								<Input
 									id="email"
 									type="email"
+									name="email"
 									placeholder="m@example.com"
 									required
 								/>
@@ -52,7 +53,7 @@ export function LoginForm({
 										Forgot your password?
 									</a>
 								</div>
-								<Input id="password" type="password" required />
+								<Input id="password" name="password" type="password" required />
 							</Field>
 							<Field>
 								<Button type="submit">Login</Button>
