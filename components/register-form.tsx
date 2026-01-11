@@ -15,9 +15,9 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
-import { signInAction } from "@/app/actions/auth";
+import { signUpAction } from "@/app/actions/auth";
 
-export function LoginForm({
+export function RegisterForm({
 	className,
 	...props
 }: React.ComponentProps<"div">) {
@@ -25,21 +25,31 @@ export function LoginForm({
 		<div className={cn("flex flex-col gap-6", className)} {...props}>
 			<Card>
 				<CardHeader>
-					<CardTitle>Enter in your account</CardTitle>
+					<CardTitle>Create a new account</CardTitle>
 					<CardDescription>
-						Provide the asked information to login to your account
+						Fill the fields with your information
 					</CardDescription>
 				</CardHeader>
 				<CardContent>
-					<form action={signInAction}>
+					<form action={signUpAction}>
 						<FieldGroup>
+							<Field>
+								<FieldLabel htmlFor="name">Name</FieldLabel>
+								<Input
+									id="name"
+									type="name"
+									name="name"
+									placeholder="Pedro"
+									required
+								/>
+							</Field>
 							<Field>
 								<FieldLabel htmlFor="email">Email</FieldLabel>
 								<Input
 									id="email"
 									type="email"
 									name="email"
-									placeholder="m@example.com"
+									placeholder="john@example.com"
 									required
 								/>
 							</Field>
@@ -56,9 +66,9 @@ export function LoginForm({
 								<Input id="password" name="password" type="password" required />
 							</Field>
 							<Field>
-								<Button type="submit">Login</Button>
+								<Button type="submit">Register</Button>
 								<Button variant="outline" type="button">
-									Login with Google
+									Register with Google
 								</Button>
 								<FieldDescription className="text-center">
 									Don&apos;t have an account?{" "}
