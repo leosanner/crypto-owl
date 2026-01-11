@@ -1,3 +1,4 @@
+"use client";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,11 +17,35 @@ import {
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { signInAction } from "@/app/actions/auth";
+import { useActionState } from "react";
+
+type InputErrors = { field: string; fieldError: string }[];
+
+function displayErrors(errors: InputErrors, fieldName: string) {
+	return (
+		<ul>
+			{errors
+				.filter((err) => err.field === fieldName)
+				.map((err, index) => {
+					return (
+						<li key={index}>
+							<span className="text-red-500 text-sm">{err.fieldError}</span>
+						</li>
+					);
+				})}
+		</ul>
+	);
+}
 
 export function LoginForm({
 	className,
 	...props
 }: React.ComponentProps<"div">) {
+	const [state, formAction, isPending] = useActionState(signInAction, {
+		success: true,
+		errors: [],
+	});
+
 	return (
 		<div className={cn("flex flex-col gap-6", className)} {...props}>
 			<Card>
@@ -31,7 +56,7 @@ export function LoginForm({
 					</CardDescription>
 				</CardHeader>
 				<CardContent>
-					<form action={signInAction}>
+					<form action={formAction}>
 						<FieldGroup>
 							<Field>
 								<FieldLabel htmlFor="email">Email</FieldLabel>
@@ -42,6 +67,7 @@ export function LoginForm({
 									placeholder="m@example.com"
 									required
 								/>
+								{state.errors && displayErrors(state.errors, "email")}
 							</Field>
 							<Field>
 								<div className="flex items-center">
@@ -54,9 +80,23 @@ export function LoginForm({
 									</a>
 								</div>
 								<Input id="password" name="password" type="password" required />
+								{state.errors && displayErrors(state.errors, "password")}
 							</Field>
 							<Field>
-								<Button type="submit">Login</Button>
+								<Button className="cursor-pointer" type="submit">
+									Login
+								</Button>
+								{state.betterAuthErrors && (
+									<ul>
+										{state.betterAuthErrors.map((err, index) => {
+											return (
+												<li key={index} className="text-red-500 text-sm">
+													<p>{err}</p>
+												</li>
+											);
+										})}
+									</ul>
+								)}
 								<Button variant="outline" type="button">
 									Login with Google
 								</Button>
