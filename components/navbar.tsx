@@ -1,4 +1,4 @@
-import { ChevronDown, Ghost } from "lucide-react"; // Ícones ilustrativos
+import { ChevronDown, Ghost, HandCoins } from "lucide-react"; // Ícones ilustrativos
 import SidebarUser from "./sidebar-user";
 import { getSession } from "@/lib/auth-session";
 import { Button } from "./ui/button";
@@ -25,7 +25,9 @@ export default async function Navbar() {
 		<nav className="flex items-center justify-between px-12 py-4 bg-white shadow-md relative">
 			{/* LADO ESQUERDO: Logo e Menu Dropdown */}
 			<div className="flex items-center gap-8">
-				<div className="font-bold text-xl text-blue-600">SUA_LOGO</div>
+				<div className="font-bold">
+					<HandCoins size={25} />
+				</div>
 
 				{/* Opção com Hover */}
 				<div className="relative group py-2">
