@@ -19,7 +19,7 @@ export type ValidadeSchema = {
 	}[];
 };
 
-export function validadeSchema(
+export function validateSchema(
 	content: Object,
 	schema: ZodObject
 ): ValidadeSchema {

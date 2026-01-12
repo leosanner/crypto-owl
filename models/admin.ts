@@ -1,5 +1,6 @@
 import { query } from "@/infra/database";
 import { QueryConfig } from "pg";
+import { UserModel } from "./user";
 
 type User = {
 	id: string;
@@ -11,25 +12,13 @@ type User = {
 };
 
 export class AdminModel {
+	userModel: UserModel;
+
+	constructor() {
+		this.userModel = new UserModel();
+	}
+
 	async getAllUsers(): Promise<User[]> {
-		const queryObject: QueryConfig = {
-			text: 'SELECT * FROM "user"',
-		};
-		const result = await query(queryObject);
-
-		if (result.rowCount !== 0) {
-			return result.rows.map((row) => {
-				return {
-					id: row.id,
-					name: row.name,
-					email: row.email,
-					createdAt: row.createdAt,
-					updatedAt: row.updatedAt,
-					role: row.role,
-				};
-			});
-		}
-
-		return [];
+		return await this.userModel.getAllUsers();
 	}
 }
