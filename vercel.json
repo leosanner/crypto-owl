@@ -1,0 +1,8 @@
+{
+	"crons": [
+		{
+			"path": "/api/user-services/crypto/test",
+			"schedule": "0 18 * * *"
+		}
+	]
+}
