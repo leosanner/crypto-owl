@@ -11,6 +11,7 @@ async function makeMigrations(dbClient: ClientBase, dryRun: boolean) {
 		direction: "up",
 		verbose: true,
 		migrationsTable: "pgmigrations",
+		checkOrder: false,
 	};
 
 	const migrationsResponse = await migrationRunner(migrationOptions);

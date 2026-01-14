@@ -7,7 +7,7 @@
 		"build": "next build",
 		"start": "next start",
 		"migration:create": "node-pg-migrate create --migrations-dir infra/migrations",
-		"migration:up": "node-pg-migrate --migrations-dir infra/migrations up",
+		"migration:up": "node-pg-migrate --no-check-order --migrations-dir infra/migrations up",
 		"lint": "eslint",
 		"test": "jest"
 	},
