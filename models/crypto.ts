@@ -1,4 +1,6 @@
+import { query } from "@/infra/database";
 import { ListingLatestResponse } from "@/schemas/coin-market-cap";
+import { Client, QueryConfig } from "pg";
 
 const API_V1_ENDPOINT = "v1/cryptocurrency";
 
@@ -28,7 +30,7 @@ export class CMCModel {
 	async listingLatest(
 		start: number = 1,
 		limit: number = 200
-	): Promise<ListingLatestResponse | ErrorMessage> {
+	): Promise<ListingLatestResponse> {
 		const urlParameters = new URLSearchParams({
 			start: String(start),
 			limit: String(limit),
@@ -44,17 +46,56 @@ export class CMCModel {
 			);
 
 			const data = (await response.json()) as ListingLatestResponse;
-			if (data) return data;
+			return data;
 		} catch (error) {
 			console.error(error);
 			throw error;
-		} finally {
-			return {
-				error: "",
-			};
 		}
 	}
+
+	async updateCurrencyListingInformation() {
+		const top200Coins = await this.listingLatest(1, 200);
+
+		if (top200Coins.status.error_code !== 0) {
+			return;
+		}
+
+		const queryResults = [];
+		let client;
+		try {
+			client = new Client();
+			await client.connect();
+			await client.query("BEGIN");
+
+			for (const coinObj of top200Coins.data) {
+				const valuesToBeInsert = [
+					coinObj.id,
+					coinObj.name,
+					coinObj.symbol,
+					coinObj.date_added,
+				];
+
+				const queryObject: QueryConfig = {
+					name: `Query to updated ${coinObj.name} is cmc_currency`,
+					text: "INSERT INTO cmc_currency(cmc_id, name, symbol, date_added) VALUES ($1, $2, $3, $4)",
+					values: valuesToBeInsert,
+				};
+
+				const result = await client.query(queryObject);
+				queryResults.push(valuesToBeInsert);
+			}
+
+			await client.query("COMMIT");
+		} catch (error) {
+			await client?.query({ text: "ROLLBACK" });
+			throw error;
+		} finally {
+			client?.end();
+		}
+
+		return queryResults;
+	}
+
 	async allCryptoCurrencyAvailable() {}
 	async getCurrencyInformation() {}
-	async updateCurrencyInformation() {}
 }

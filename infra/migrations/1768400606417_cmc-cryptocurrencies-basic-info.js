@@ -9,23 +9,24 @@ exports.shorthands = undefined;
  * @returns {Promise<void> | void}
  */
 exports.up = (pgm) => {
+	pgm.createExtension("uuid-ossp", { ifNotExists: true });
+
 	pgm.createTable("cmc_currency", {
 		id: {
 			type: "uuid",
+			primaryKey: true,
+			notNull: true,
+			default: pgm.func("uuid_generate_v4()"),
 		},
 		cmc_id: {
 			type: "integer",
 		},
 		name: {
-			type: "varchar(30)",
+			type: "varchar(70)",
 			notNull: true,
 		},
 		symbol: {
-			type: "varchar(10)",
-			notNull: true,
-		},
-		slug: {
-			type: "varchar(15)",
+			type: "varchar(30)",
 			notNull: true,
 		},
 		updatedAt: {

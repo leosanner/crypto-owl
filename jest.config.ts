@@ -8,6 +8,7 @@ dotenv.config({
 const config: Config = {
 	verbose: true,
 	rootDir: ".",
+	testTimeout: 100000,
 };
 
 export default config;
