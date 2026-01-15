@@ -1,60 +1,41 @@
-import { UserModel } from "@/models/user";
-import { validateSchema } from "@/schemas/auth";
-import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
+import { createHash, randomBytes } from "crypto";
+import { headers } from "next/headers";
+import { NextResponse } from "next/server";
 
-type ResponseType = {
-	userId: string;
-	secretKey: string;
+const generateRandomString = (length: number = 32) => {
+	return randomBytes(length).toString("hex");
 };
 
-const ResponseSchema = z.object({
-	userId: z.string().min(10).max(50),
-	secretKey: z.string().min(10).max(70),
-});
+export async function GET() {
+	const headerList = await headers();
+	const authorization = headerList.get("authorization");
+	const cronSecret =
+		process.env.CRON_SECRET ||
+		createHash("sha256").update(generateRandomString()).digest("hex");
 
-async function validatePostCredentials(obj: ResponseType) {
-	const userModel = new UserModel();
-	const userRole = await userModel.getUserRole(obj.userId);
+	if (authorization === `Bearer ${cronSecret}`) {
+		const dateStart = Date.now();
 
-	if (!userRole || userRole !== "allowedCron") {
-		return false;
-	}
+		// doSomenthing
+		const wait = (time: number) =>
+			new Promise((resolve) => setTimeout(resolve, time));
 
-	if (obj.secretKey === process.env.CRON_SECRET) {
-		return true;
-	}
+		await wait(2000);
 
-	return false;
-}
+		//
+		const dateEnd = Date.now();
+		const date = new Date();
+		const timeToExecuteInSeconds = (dateEnd - dateStart) / 1000;
 
-export async function POST(req: NextRequest, context: { params: Promise<{}> }) {
-	const requestBody = await req.json();
-	const { userId, secretKey } = requestBody;
-
-	const { success, errors } = validateSchema(
-		{ userId, secretKey },
-		ResponseSchema
-	);
-
-	if (!success) {
-		return NextResponse.json({ error: errors }, { status: 401 });
-	}
-
-	const allowedPostCredentials = await validatePostCredentials({
-		userId,
-		secretKey,
-	});
-
-	if (allowedPostCredentials) {
 		return NextResponse.json(
-			{ content: "Allowed credentials, persuing cron operations" },
-			{ status: 200 }
+			`Authorized, cron job executed at ${date}, took ${timeToExecuteInSeconds.toFixed(
+				3
+			)} seconds to execute.`,
+			{
+				status: 200,
+			}
 		);
 	}
 
-	return NextResponse.json(
-		{ error: "Unauthorized, please verify your credentials" },
-		{ status: 401 }
-	);
+	return NextResponse.json("Unauthorized", { status: 401 });
 }
